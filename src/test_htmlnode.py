@@ -15,7 +15,7 @@ class TestHTMLNode(unittest.TestCase):
         html_node = HTMLNode("p", "This is an html node", "<span>shiny</span>", {})
         html_node1 = HTMLNode(None, None, None, None)
         self.assertFalse(html_node.__eq__(html_node1))
-    def test__repre__(self):
+    def test__repr__(self):
         TAG = "a"
         VALUE = "Click Me!"
         CHILDREN = None
@@ -26,4 +26,8 @@ class TestHTMLNode(unittest.TestCase):
     def test_props_to_html(self):
         expect = " href='https://boot.dev' title='shiny'"
         html_node = HTMLNode("a", 'Click Me', None, {"href": "https://boot.dev", "title": "shiny"})
+        self.assertEqual(expect, html_node.props_to_html())
+    def test_props_to_html_no_props(self):
+        expect = ""
+        html_node = HTMLNode("p", 'Hi', None)
         self.assertEqual(expect, html_node.props_to_html())
