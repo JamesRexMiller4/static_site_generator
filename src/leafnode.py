@@ -22,10 +22,11 @@ class LeafNode(HTMLNode):
     
     def to_html(self) -> str:
         if self.value is None:
-            return ValueError
+            raise ValueError
         if self.tag is None:
             return str(self.value)
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
     
     def props_to_html(self) -> str:
         return super().props_to_html()

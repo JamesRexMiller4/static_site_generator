@@ -20,8 +20,8 @@ class TestLeafNode(unittest.TestCase):
         self.assertTrue(leafnode.__eq__(leafnode1))
     def test_requires_value(self):
         leafnode = LeafNode("a")
-        expect = ValueError
-        self.assertEqual(expect, leafnode.to_html())
+        with self.assertRaises(ValueError):
+            leafnode.to_html()
     def test_missing_tag(self):
         leafnode = LeafNode(None, "I'm a dawg")
         expect = "I'm a dawg"
