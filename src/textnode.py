@@ -3,11 +3,10 @@ class TextNode:
         self.text = text 
         self.text_type = text_type
         self.url = url
-    # TODO refactor to use kwargs
-    def __eq__(self, textnode) -> bool:
-        if self.text == textnode.text \
-        and self.text_type == textnode.text_type \
-        and self.url == textnode.url:
+    def __eq__(self, text_node) -> bool:
+        if self.text == text_node.text \
+        and self.text_type == text_node.text_type \
+        and self.url == text_node.url:
             return True
         return False
 
