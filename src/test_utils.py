@@ -42,3 +42,13 @@ class TestUtils(unittest.TestCase):
         with self.assertRaises(Exception) as ctx:
             text_node_to_html_node(text_node)
         self.assertTrue(expect, str(ctx.exception))
+    def text_split_nodes_delimiter_single_node(self):
+        pass
+    def text_split_nodes_delimiter_multiple(self):
+        pass
+    def text_split_nodes_delimiter_text_no_nodes(self):
+        pass
+    def text_split_nodes_delimiter_text(self):
+        pass
+    def text_split_nodes_delimiter_text(self):
+        pass
