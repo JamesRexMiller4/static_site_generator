@@ -3,7 +3,7 @@ import unittest
 from textnode import TextNode
 from leafnode import LeafNode
 
-from utils import text_node_to_html_node
+from utils import text_node_to_html_node, split_nodes_delimiter, text_type_bold, text_type_text, text_type_code, text_type_italic
 
 class TestUtils(unittest.TestCase):
     def test_text_node_to_html_text(self):
@@ -42,13 +42,38 @@ class TestUtils(unittest.TestCase):
         with self.assertRaises(Exception) as ctx:
             text_node_to_html_node(text_node)
         self.assertTrue(expect, str(ctx.exception))
-    def text_split_nodes_delimiter_single_node(self):
-        pass
-    def text_split_nodes_delimiter_multiple(self):
-        pass
-    def text_split_nodes_delimiter_text_no_nodes(self):
-        pass
-    def text_split_nodes_delimiter_text(self):
-        pass
-    def text_split_nodes_delimiter_text(self):
-        pass
+    def test_text_split_nodes_delimiter_single_node(self):
+        node = TextNode("This is text with a `code block` word", text_type_text)
+        new_nodes = split_nodes_delimiter([node], "`", text_type_code)
+        expect = [
+            TextNode("This is text with a ", text_type_text),
+            TextNode("code block", text_type_code),
+            TextNode(" word", text_type_text),
+        ]
+        self.assertTrue(expect, new_nodes)
+    def test_text_split_nodes_delimiter_multiple(self):
+        node_1 = TextNode("I hear in France they write words in *italics*", text_type_text)
+        node_2 = TextNode("I am French, *how dare you*", text_type_text)
+        new_nodes = split_nodes_delimiter([node_1, node_2], "*", text_type_italic)
+        expect = [
+            TextNode("I hear in France they write words in ", text_type_text),
+            TextNode("italics", text_type_italic),
+            TextNode("", text_type_text),
+            TextNode("I am French, ", text_type_text),
+            TextNode("how dare you", text_type_italic),
+            TextNode("", text_type_text)
+        ]
+        self.assertEqual(expect, new_nodes)
+    def test_text_split_nodes_delimiter_text_no_nodes(self):
+        new_nodes = split_nodes_delimiter([], "*", text_type_italic)
+        expect = []
+        self.assertEqual(expect, new_nodes)
+    def test_text_split_nodes_delimiter_bold(self):
+        node = TextNode("Nothing captivates the mind's ear like **LOUD NOISES** as you read", text_type_text)
+        new_nodes = split_nodes_delimiter([node], "**", text_type_bold)
+        expect = [
+            TextNode("Nothing captivates the mind's ear like ", text_type_text),
+            TextNode("LOUD NOISES", text_type_bold),
+            TextNode(" as you read", text_type_text)
+        ]
+        self.assertEqual(expect, new_nodes)

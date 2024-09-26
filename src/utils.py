@@ -40,7 +40,7 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
             new_nodes.append(old_node)
         elif len(split_nodes) == 2:
             raise Exception(f"Invalid syntax, missing opening/closing delimiter: {delimiter} in {old_node.text}")
-        else: 
+        else:
             for idx, split_node_text in enumerate(split_nodes):
                 if idx == 1:
                     new_nodes.append(TextNode(split_node_text, text_type))
