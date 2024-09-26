@@ -3,8 +3,16 @@ import unittest
 from textnode import TextNode
 from leafnode import LeafNode
 
-from utils import text_node_to_html_node, split_nodes_delimiter, text_type_bold, text_type_text, text_type_code, text_type_italic
-
+from utils import (
+    text_node_to_html_node, 
+    split_nodes_delimiter,
+    extract_markdown_images,
+    extract_markdown_links,
+    text_type_bold, 
+    text_type_text, 
+    text_type_code, 
+    text_type_italic
+)
 class TestUtils(unittest.TestCase):
     def test_text_node_to_html_text(self):
         text_node = TextNode("coffee", "text")
@@ -77,3 +85,35 @@ class TestUtils(unittest.TestCase):
             TextNode(" as you read", text_type_text)
         ]
         self.assertEqual(expect, new_nodes)
+    def test_extract_markdown_img(self):
+        ex_text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        extracted = extract_markdown_images(ex_text)
+        expect = [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")]
+        self.assertEqual(expect, extracted)
+    def test_extract_empty_string(self):
+        ex_text = ""
+        extracted = extract_markdown_images(ex_text)
+        expect = []
+        self.assertEqual(expect, extracted)
+    def test_extract_img_missing_url(self):
+        ex_text = "This is text with a ![rick roll]"
+        expect = Exception("The text string contains missing elements of valid Markdown image syntax")
+        with self.assertRaises(Exception) as ctx:
+            extract_markdown_images(ex_text)
+        self.assertTrue(expect, str(ctx.exception))
+    def test_extract_markdown_link(self):
+        ex_text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        extracted = extract_markdown_links(ex_text)
+        expect = [("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")]
+        self.assertEqual(expect, extracted)
+    def test_extract_link_empty_string(self):
+        ex_text = ""
+        extracted = extract_markdown_links(ex_text)
+        expect = []
+        self.assertEqual(expect, extracted)
+    def test_extract_link_missing_url(self):
+        ex_text = "This is text with a link [to boot dev]"
+        expect = Exception("The text string contains missing elements of valid Markdown image syntax")
+        with self.assertRaises(Exception) as ctx:
+            extract_markdown_links(ex_text)
+        self.assertTrue(expect, str(ctx.exception))

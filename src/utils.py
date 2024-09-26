@@ -1,5 +1,6 @@
 from leafnode import LeafNode
 from textnode import TextNode
+import re
 
 text_type_text = "text"
 text_type_bold = "bold"
@@ -47,3 +48,26 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
                 else:
                     new_nodes.append(TextNode(split_node_text, text_type_text))
     return new_nodes
+
+def extract_markdown_images(text: str) -> list:
+    '''
+        Takes raw markdown text and returns a list of tuples. 
+        Each tuple should contain the alt text and the URL of any markdown images.
+    '''
+    alt_text = re.findall(r'\[(.*?)\]', text)
+    url = re.findall(r'\((.*?)\)', text)
+    if len(alt_text) != len(url):
+        raise Exception("The text string contains missing elements of valid Markdown image syntax")
+    return list(zip(alt_text, url))
+    
+
+def extract_markdown_links(text: str) -> list:
+    '''
+        Takes raw markdown text extracts markdown links and returns a list of tuples. 
+        It should return tuples of anchor text and URLs.
+    '''
+    anchor_txt = re.findall(r'\[(.*?)\]', text)
+    url = re.findall(r'\((.*?)\)', text)
+    if len(anchor_txt) != len(url):
+        raise Exception("The text string contains missing elements of valid Markdown link syntax")
+    return list(zip(anchor_txt, url))
